@@ -1,33 +1,29 @@
-
-# I am not sure if this works anymore.
-____
-
 # PrivateBin Docker
 Dockerfile to setup [PrivateBin](https://github.com/PrivateBin/PrivateBin) and [Certbot](https://certbot.eff.org/)
 inside a [Docker](https://www.docker.com) container.
 
 ___
 
-# Useage
+# Usage
 Replace `example.com` with the domain you wish to use. (Dockerfile and `cert.sh` before building)
 
 ### Build with the below command
 `docker build PrivateBin-docker -t privatebin`
 
 ### Docker Run Command
-`sudo docker run -p 80:80 -p 443:443 -i -d -t --name PrivateBin -h example.com privatebin`
+`sudo docker run -p 80:80 -p 443:443 -d --name privatebin -h domain.com privatebin`
 
 ### Read and Run `cert.sh`
-`docker exec -i PrivateBin bash -c "cd / && bash cert.sh"`
+`docker exec -i privatebin bash -c "cd / && bash cert.sh"`
 
 ### Add to Cron
-Remember to choose a different time
 
-`22 2 * * * docker exec -i PrivateBin bash -c "certbot renew --post-hook 'service apache2 stop'"`
+`$ sudo crontab -e`
 
-`22 1 * * * docker start PrivateBin`
+`0 0 1 * * docker exec -i privatebin bash -c "certbot renew"`
 
-###### Please note that stopping and starting apache2 might not be necessary. I will be testing this in 3 months time when my certificate expires.
+This will renew the certificate every month (30 days)
+
 ___
 
 ## [Certbot Documentation](https://certbot.eff.org/docs/using.html)
